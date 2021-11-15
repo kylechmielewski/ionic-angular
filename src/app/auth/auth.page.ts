@@ -32,7 +32,7 @@ export class AuthPage implements OnInit {
           this.isLoading = false;
           loadingElement.dismiss();
           this.router.navigateByUrl('/places/tabs/discover');
-        }, 1000);
+        }, 500);
       });
   }
 
