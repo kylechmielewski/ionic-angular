@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { LoadingController } from '@ionic/angular';
 import { SegmentChangeEventDetail } from '@ionic/core';
 import { Subscription } from 'rxjs';
 import { take, map, tap, delay } from 'rxjs/operators';
@@ -15,12 +16,14 @@ export class DiscoverPage implements OnInit, OnDestroy {
   loadedPlaces: Place[];
   listedLoadedPlaces: Place[];
   relevantPlaces: Place[];
+  isLoading = false;
   private filter = 'all';
   private placesSub: Subscription;
 
   constructor(
     private placesService: PlacesService,
-    private authService: AuthService
+    private authService: AuthService,
+    private loadingController: LoadingController
   ) {}
 
   ngOnInit() {
@@ -30,25 +33,25 @@ export class DiscoverPage implements OnInit, OnDestroy {
     });
   }
 
-  onFilterUpdate(filter: string) {
-    // this.authService.userId.pipe(take(1)).subscribe(userId => {
+  ionViewWillEnter() {
+    this.isLoading = true;
+    this.loadingController
+      .create({ message: 'Loading Places...' })
+      .then((loadingEl) => {
+        loadingEl.present();
+        this.placesService.fetchPlaces().subscribe(() => {
+          loadingEl.dismiss();
+          this.isLoading = false;
+        });
+      });
+  }
 
-    // });
+  onFilterUpdate(filter: string) {
     const isShown = (place) =>
       filter === 'all' || place.userId !== this.authService.userId;
     this.relevantPlaces = this.loadedPlaces.filter(isShown);
     this.listedLoadedPlaces = this.relevantPlaces.slice(1);
     this.filter = filter;
-
-    // if (event.detail.value === 'all') {
-    //   this.relevantPlaces = this.loadedPlaces;
-    //   this.listedLoadedPlaces = this.relevantPlaces.slice(1);
-    // } else {
-    //   this.relevantPlaces = this.loadedPlaces.filter(
-    //     (place) => place.userId !== this.authService.userId
-    //   );
-    //   this.listedLoadedPlaces = this.relevantPlaces.slice(1);
-    // }
   }
 
   ngOnDestroy() {
