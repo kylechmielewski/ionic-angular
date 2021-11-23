@@ -1,0 +1,45 @@
+<!-- <div class="picker">
+  <ion-img
+    role="button"
+    class="image"
+    (click)="onPickImage()"
+    [src]="selectedImage"
+    *ngIf="selectedImage"
+  ></ion-img>
+  <ion-button color="primary" (click)="onPickImage()" *ngIf="!selectedImage">
+    <ion-icon name="camera" slot="start"></ion-icon>
+    <ion-label>Take Photo</ion-label>
+  </ion-button>
+</div>
+<input
+  type="file"
+  accept="image/jpeg"
+  *ngIf="usePicker"
+  #filePicker
+  (change)="onFileChosen($event)"
+/> -->
+
+<div class="picker">
+  <ion-img
+    role="button"
+    class="image"
+    (click)="onGetPhoto($event)"
+    [src]="selectedImage"
+    *ngIf="selectedImage && showPreview"
+  ></ion-img>
+  <ion-button
+    color="primary"
+    (click)="onGetPhoto($event)"
+    *ngIf="!selectedImage || !showPreview"
+  >
+    <ion-icon name="camera" slot="start"></ion-icon>
+    <ion-label>Take Photo</ion-label>
+  </ion-button>
+</div>
+<input
+  type="file"
+  accept="image/jpeg"
+  *ngIf="usePicker"
+  #filePicker
+  (change)="onGetPhoto($event)"
+/>
